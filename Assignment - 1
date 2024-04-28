@@ -1,0 +1,57 @@
+1. Use any suitable dataset (e.g. https://www.kaggle.com/zhaoyingzhu/heartesv) and Perform following operation on given dataset suitable programming language,
+a) Find Missing Values and replace the missing values with suitable alternative.
+b) Remove inconsistency (if any) in the dataset.
+c) Prepare boxplot analysis for each numerical attribute. Find outliers (if any) in each attribute in the dataset.
+d) Draw histogram for any two suitable attributes (E.g. age and Chol attributes for above dataset)
+e) Find data type of each column.
+f) Finding out Zero's.
+g) Find Mean age of patients considering above dataset.
+h) Find shape of data.
+
+#########################################################################################################################################
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+url = "https://path_to_dataset/heart.csv"  # Update this with the path to the dataset
+data = pd.read_csv(url)
+
+# Check for missing values
+print(data.isnull().sum())
+
+# Replace missing values with the median (numerical columns) or mode (categorical columns)
+for column in data.columns:
+    if data[column].dtype == 'float64' or data[column].dtype == 'int64':
+        data[column].fillna(data[column].median(), inplace=True)
+    else:
+        data[column].fillna(data[column].mode()[0], inplace=True)
+
+# Generate boxplots for each numerical attribute
+numerical_cols = data.select_dtypes(include=['int64', 'float64']).columns
+for col in numerical_cols:
+    plt.figure(figsize=(10, 5))
+    sns.boxplot(x=data[col])
+    plt.title(f'Boxplot of {col}')
+    plt.show()
+
+# Histogram of Age and Cholesterol
+data[['age', 'chol']].hist(bins=20, figsize=(12, 5), layout=(1, 2))
+plt.show()
+
+# Print data types of each column
+print(data.dtypes)
+
+# Count zeros in each column
+zeros_count = (data == 0).sum()
+print(zeros_count)
+
+# Calculate mean age
+mean_age = data['age'].mean()
+print(f"The mean age of the patients is: {mean_age:.2f}")
+
+# Print the shape of the dataset
+print(f"The shape of the dataset is: {data.shape}")
+
